@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NutriCalc | Instant Health Metric Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(255, 255, 255, 0.035);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent-glow: rgba(99, 102, 241, 0.35);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background glow */
+    .glow-sphere {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--accent-glow) 0%, rgba(0,0,0,0) 70%);
+      top: -100px;
+      right: -80px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 36px 32px;
+      max-width: 460px;
+      width: 100%;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #818cf8;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 1.65rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+
+    p.sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+    }
+
+    /* Modern Dark Inputs */
+    input {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.07);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Custom Dark Dropdown (Fixes the ugly white box!) */
+    .select-wrap {
+      position: relative;
+    }
+
+    select {
+      width: 100%;
+      padding: 13px 40px 13px 16px;
+      border-radius: 12px;
+      background-color: #131929; /* Dark solid base */
+      border: 1px solid var(--card-border);
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      transition: all 0.2s ease;
+    }
+
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Style the dropdown options inside the menu */
+    select option {
+      background-color: #131929;
+      color: #f8fafc;
+      padding: 12px;
+    }
+
+    /* Clean custom arrow */
+    .select-wrap::after {
+      content: "▾";
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #818cf8;
+      font-size: 1rem;
+      pointer-events: none;
+    }
+
+    /* Button */
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.98rem;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 18px var(--accent-glow);
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    /* Results */
+    .result {
+      display: none;
+      margin-top: 24px;
+      padding-top: 22px;
+      border-top: 1px solid var(--card-border);
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-title {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #818cf8;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .metric-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      padding: 14px 10px;
+      border-radius: 12px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .metric-box:hover {
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    .metric-box span {
+      display: block;
+      font-size: 0.76rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+
+    .metric-box strong {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #f8fafc;
+    }
+
+    .metric-box.highlight strong {
+      color: #818cf8;
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-sphere"></div>
+
+  <div class="card">
+    <div class="header-tag">Interactive Utility</div>
+    <h2>QuickNutri</h2>
+    <p class="sub">Instant Basal Metabolic Rate (BMR) & daily macronutrient target estimator.</p>
+
+    <div class="form-group">
+      <label>Weight (kg)</label>
+      <input type="number" id="weight" placeholder="e.g. 65" value="65" />
+    </div>
+
+    <div class="form-group">
+      <label>Height (cm)</label>
+      <input type="number" id="height" placeholder="e.g. 172" value="172" />
+    </div>
+
+    <div class="form-group">
+      <label>Age (years)</label>
+      <input type="number" id="age" placeholder="e.g. 21" value="21" />
+    </div>
+
+    <div class="form-group">
+      <label>Target Goal</label>
+      <div class="select-wrap">
+        <select id="goal">
+          <option value="maintain">Maintain Weight</option>
+          <option value="loss">Healthy Fat Loss (-400 kcal)</option>
+          <option value="gain">Lean Muscle Gain (+350 kcal)</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn" onclick="calculateMacros()">Calculate Targets</button>
+
+    <div class="result" id="resultBox">
+      <div class="result-title">Estimated Daily Targets</div>
+      <div class="grid">
+        <div class="metric-box highlight">
+          <span>Target Calories</span>
+          <strong id="resCalories">0 kcal</strong>
+        </div>
+        <div class="metric-box">
+          <span>Protein</span>
+          <strong id="resProtein">0 g</strong>
+        </div>
+        <div class="metric-box">
+          <span>Carbs</span>
+          <strong id="resCarbs">0 g</strong>
+        </div>
+        <div class="metric-box">
+          <span>Healthy Fats</span>
+          <strong id="resFats">0 g</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function calculateMacros() {
+      const w = parseFloat(document.getElementById('weight').value);
+      const h = parseFloat(document.getElementById('height').value);
+      const a = parseFloat(document.getElementById('age').value);
+      const goal = document.getElementById('goal').value;
+
+      if (!w || !h || !a) {
+        alert("Please enter valid numbers for weight, height, and age.");
+        return;
+      }
+
+      // Mifflin-St Jeor Formula
+      let bmr = (10 * w) + (6.25 * h) - (5 * a) + 5;
+      let calories = Math.round(bmr * 1.35); // Moderate activity factor
+
+      if (goal === 'loss') calories -= 400;
+      if (goal === 'gain') calories += 350;
+
+      // Balanced Macro splits: 25% Protein, 50% Carbs, 25% Fats
+      const protein = Math.round((calories * 0.25) / 4);
+      const carbs = Math.round((calories * 0.50) / 4);
+      const fats = Math.round((calories * 0.25) / 9);
+
+      document.getElementById('resCalories').innerText = calories + " kcal";
+      document.getElementById('resProtein').innerText = protein + " g";
+      document.getElementById('resCarbs').innerText = carbs + " g";
+      document.getElementById('resFats').innerText = fats + " g";
+
+      document.getElementById('resultBox').style.display = "block";
+    }
+
+    // Auto-calculate once on page load for immediate visual impact
+    window.onload = calculateMacros;
+  </script>
+</body>
+</html>
