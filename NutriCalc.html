@@ -10,11 +10,13 @@
   <style>
     :root {
       --bg: #0b0f19;
-      --card-bg: rgba(255, 255, 255, 0.035);
-      --card-border: rgba(255, 255, 255, 0.08);
+      --card-bg: rgba(23, 31, 51, 0.55);
+      --card-border: rgba(255, 255, 255, 0.1);
       --accent: #6366f1;
       --accent-hover: #4f46e5;
-      --accent-glow: rgba(99, 102, 241, 0.35);
+      --accent-glow: rgba(99, 102, 241, 0.4);
+      --accent-cyan: #06b6d4;
+      --accent-pink: #ec4899;
       --text: #f8fafc;
       --muted: #94a3b8;
     }
@@ -38,52 +40,175 @@
       overflow-x: hidden;
     }
 
-    /* Ambient background glow */
+    /* Animated Dynamic Background Spheres */
     .glow-sphere {
       position: fixed;
-      width: 500px;
-      height: 500px;
       border-radius: 50%;
-      background: radial-gradient(circle, var(--accent-glow) 0%, rgba(0,0,0,0) 70%);
-      top: -100px;
-      right: -80px;
-      z-index: 0;
       pointer-events: none;
+      z-index: 0;
+      filter: blur(80px);
+      opacity: 0.7;
     }
 
+    .glow-sphere-1 {
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, rgba(99, 102, 241, 0) 70%);
+      top: -100px;
+      right: -80px;
+      animation: floatGlow1 12s ease-in-out infinite alternate;
+    }
+
+    .glow-sphere-2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.35) 0%, rgba(6, 182, 212, 0) 70%);
+      bottom: -120px;
+      left: -80px;
+      animation: floatGlow2 15s ease-in-out infinite alternate;
+    }
+
+    .glow-sphere-3 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(236, 72, 153, 0.25) 0%, rgba(236, 72, 153, 0) 70%);
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: floatGlow3 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatGlow1 {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-40px, 50px) scale(1.1); }
+      100% { transform: translate(30px, -30px) scale(0.95); }
+    }
+
+    @keyframes floatGlow2 {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(50px, -40px) scale(1.15); }
+      100% { transform: translate(-30px, 30px) scale(0.9); }
+    }
+
+    @keyframes floatGlow3 {
+      0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.4; }
+      50% { transform: translate(-40%, -60%) scale(1.2); opacity: 0.7; }
+      100% { transform: translate(-60%, -40%) scale(1); opacity: 0.5; }
+    }
+
+    /* Floating Particles Grid */
+    .particles-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background-image: 
+        radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 80%);
+      -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 80%);
+    }
+
+    /* Main Container Card */
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 20px;
+      border-radius: 24px;
       padding: 36px 32px;
-      max-width: 460px;
+      max-width: 480px;
       width: 100%;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6),
+                  0 0 30px rgba(99, 102, 241, 0.1);
       position: relative;
       z-index: 1;
+      animation: cardEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
+    .card:hover {
+      box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.7),
+                  0 0 40px rgba(99, 102, 241, 0.2);
+    }
+
+    @keyframes cardEntrance {
+      0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.96);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Header Tag with Shimmer */
     .header-tag {
-      display: inline-block;
-      padding: 4px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
       background: rgba(99, 102, 241, 0.12);
       border: 1px solid rgba(99, 102, 241, 0.3);
       color: #818cf8;
       border-radius: 999px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
       letter-spacing: 0.5px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(99, 102, 241, 0.15);
+    }
+
+    .header-tag::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        60deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 70%
+      );
+      transform: rotate(30deg);
+      animation: shimmer 4s infinite;
+    }
+
+    .header-tag .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: #818cf8;
+      box-shadow: 0 0 8px #818cf8;
+      animation: dotPulse 1.8s infinite;
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.5; }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) rotate(30deg); }
+      20%, 100% { transform: translateX(100%) rotate(30deg); }
     }
 
     h2 {
-      font-size: 1.65rem;
+      font-size: 1.75rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       margin-bottom: 6px;
-      color: #fff;
+      background: linear-gradient(135deg, #ffffff 40%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     p.sub {
@@ -93,38 +218,106 @@
       line-height: 1.5;
     }
 
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
     .form-group {
       margin-bottom: 18px;
+      position: relative;
     }
 
     label {
-      display: block;
-      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
       font-weight: 600;
       color: #cbd5e1;
       margin-bottom: 8px;
+      transition: color 0.2s ease;
     }
 
-    /* Modern Dark Inputs */
+    .form-group:focus-within label {
+      color: #818cf8;
+    }
+
+    /* Modern Animated Inputs */
     input {
       width: 100%;
       padding: 13px 16px;
       border-radius: 12px;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(15, 23, 42, 0.6);
       border: 1px solid var(--card-border);
       color: #fff;
       font-size: 0.95rem;
+      font-weight: 600;
       outline: none;
-      transition: all 0.2s ease;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    input:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(15, 23, 42, 0.8);
     }
 
     input:focus {
       border-color: var(--accent);
-      background: rgba(255, 255, 255, 0.07);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      background: rgba(15, 23, 42, 0.95);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25),
+                  0 4px 12px rgba(99, 102, 241, 0.15);
+      transform: translateY(-1px);
     }
 
-    /* Custom Dark Dropdown (Fixes the ugly white box!) */
+    /* Segmented Control for Gender */
+    .gender-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 3px;
+      position: relative;
+    }
+
+    .gender-btn {
+      padding: 9px;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 9px;
+      border: none;
+      background: transparent;
+      transition: color 0.25s ease;
+      z-index: 2;
+    }
+
+    .gender-btn.active {
+      color: #ffffff;
+    }
+
+    .gender-slider {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: calc(50% - 3px);
+      height: calc(100% - 6px);
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+      border-radius: 9px;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 2px 10px var(--accent-glow);
+      z-index: 1;
+    }
+
+    .gender-switch[data-gender="female"] .gender-slider {
+      transform: translateX(100%);
+    }
+
+    /* Custom Dark Dropdown */
     .select-wrap {
       position: relative;
     }
@@ -133,31 +326,36 @@
       width: 100%;
       padding: 13px 40px 13px 16px;
       border-radius: 12px;
-      background-color: #131929; /* Dark solid base */
+      background-color: rgba(15, 23, 42, 0.6);
       border: 1px solid var(--card-border);
       color: #fff;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
+      font-weight: 600;
       outline: none;
       cursor: pointer;
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
-      transition: all 0.2s ease;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    select:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      background-color: rgba(15, 23, 42, 0.85);
     }
 
     select:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+      transform: translateY(-1px);
     }
 
-    /* Style the dropdown options inside the menu */
     select option {
-      background-color: #131929;
+      background-color: #0f172a;
       color: #f8fafc;
       padding: 12px;
     }
 
-    /* Clean custom arrow */
     .select-wrap::after {
       content: "▾";
       position: absolute;
@@ -167,55 +365,108 @@
       color: #818cf8;
       font-size: 1rem;
       pointer-events: none;
+      transition: transform 0.25s ease;
     }
 
-    /* Button */
+    .select-wrap:focus-within::after {
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    /* Animated Button with Ripple */
     .btn {
       width: 100%;
-      padding: 14px;
+      padding: 15px;
       border: none;
-      border-radius: 12px;
-      background: var(--accent);
+      border-radius: 14px;
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
       color: #fff;
       font-weight: 700;
-      font-size: 0.98rem;
+      font-size: 1rem;
+      letter-spacing: 0.01em;
       cursor: pointer;
       margin-top: 8px;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 18px var(--accent-glow);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 6px 20px -2px var(--accent-glow);
     }
 
     .btn:hover {
-      background: var(--accent-hover);
-      transform: translateY(-1px);
+      background: linear-gradient(135deg, #6b6ef9 0%, #4338ca 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -2px var(--accent-glow), 0 0 15px rgba(99, 102, 241, 0.5);
     }
 
     .btn:active {
-      transform: translateY(0);
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 4px 12px var(--accent-glow);
     }
 
-    /* Results */
+    /* Ripple Effect */
+    .btn .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.35);
+      transform: scale(0);
+      animation: rippleAnim 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes rippleAnim {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* Results Container */
     .result {
       display: none;
-      margin-top: 24px;
-      padding-top: 22px;
+      margin-top: 28px;
+      padding-top: 24px;
       border-top: 1px solid var(--card-border);
-      animation: fadeIn 0.3s ease-out;
+      opacity: 0;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
+    .result.visible {
+      display: block;
+      animation: resultContainerFade 0.5s ease forwards;
+    }
+
+    @keyframes resultContainerFade {
+      0% {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
     }
 
     .result-title {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       color: #818cf8;
       font-weight: 700;
-      margin-bottom: 12px;
-      text-align: center;
+    }
+
+    .result-badge {
+      font-size: 0.72rem;
+      background: rgba(6, 182, 212, 0.12);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-weight: 600;
     }
 
     .grid {
@@ -224,66 +475,211 @@
       gap: 12px;
     }
 
+    /* Metric Boxes with Pop Stagger */
     .metric-box {
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(15, 23, 42, 0.5);
       border: 1px solid var(--card-border);
-      padding: 14px 10px;
-      border-radius: 12px;
+      padding: 16px 12px;
+      border-radius: 16px;
       text-align: center;
-      transition: border-color 0.2s;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+
+    .result.visible .metric-box {
+      animation: boxPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .result.visible .metric-box:nth-child(1) { animation-delay: 0.05s; }
+    .result.visible .metric-box:nth-child(2) { animation-delay: 0.15s; }
+    .result.visible .metric-box:nth-child(3) { animation-delay: 0.25s; }
+    .result.visible .metric-box:nth-child(4) { animation-delay: 0.35s; }
+
+    @keyframes boxPopIn {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .metric-box:hover {
-      border-color: rgba(99, 102, 241, 0.3);
+      border-color: rgba(99, 102, 241, 0.4);
+      background: rgba(23, 31, 51, 0.8);
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.4),
+                  0 0 15px rgba(99, 102, 241, 0.15);
     }
 
     .metric-box span {
       display: block;
-      font-size: 0.76rem;
+      font-size: 0.75rem;
       color: var(--muted);
       text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 4px;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+      font-weight: 600;
     }
 
     .metric-box strong {
-      font-size: 1.15rem;
+      font-size: 1.25rem;
       font-weight: 800;
       color: #f8fafc;
+      display: inline-block;
+      transition: transform 0.2s ease;
+    }
+
+    .metric-box.highlight {
+      background: linear-gradient(145deg, rgba(99, 102, 241, 0.15) 0%, rgba(15, 23, 42, 0.6) 100%);
+      border-color: rgba(99, 102, 241, 0.35);
     }
 
     .metric-box.highlight strong {
       color: #818cf8;
+      font-size: 1.35rem;
+    }
+
+    /* Macro Breakdown Visual Bar */
+    .macro-breakdown {
+      margin-top: 20px;
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px;
+      opacity: 0;
+      transform: translateY(15px);
+    }
+
+    .result.visible .macro-breakdown {
+      animation: boxPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s forwards;
+    }
+
+    .macro-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .progress-bar-track {
+      height: 10px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      display: flex;
+      overflow: hidden;
+      gap: 3px;
+      padding: 2px;
+    }
+
+    .bar-segment {
+      height: 100%;
+      border-radius: 6px;
+      width: 0%;
+      transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .bar-protein {
+      background: linear-gradient(90deg, #6366f1, #818cf8);
+    }
+
+    .bar-carbs {
+      background: linear-gradient(90deg, #06b6d4, #22d3ee);
+    }
+
+    .bar-fats {
+      background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    }
+
+    .legend {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot-protein { background: #818cf8; }
+    .dot-carbs { background: #22d3ee; }
+    .dot-fats { background: #fbbf24; }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 26px 20px;
+      }
+      .grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="glow-sphere"></div>
+  <!-- Ambient Animated Background Elements -->
+  <div class="particles-bg"></div>
+  <div class="glow-sphere glow-sphere-1"></div>
+  <div class="glow-sphere glow-sphere-2"></div>
+  <div class="glow-sphere glow-sphere-3"></div>
 
   <div class="card">
-    <div class="header-tag">Interactive Utility</div>
+    <div class="header-tag">
+      <span class="pulse-dot"></span>
+      Interactive Utility
+    </div>
     <h2>QuickNutri</h2>
     <p class="sub">Instant Basal Metabolic Rate (BMR) & daily macronutrient target estimator.</p>
 
+    <!-- Gender Selector -->
     <div class="form-group">
-      <label>Weight (kg)</label>
-      <input type="number" id="weight" placeholder="e.g. 65" value="65" />
+      <label>Gender</label>
+      <div class="gender-switch" id="genderSwitch" data-gender="male">
+        <div class="gender-slider"></div>
+        <button class="gender-btn active" type="button" onclick="setGender('male')">♂ Male</button>
+        <button class="gender-btn" type="button" onclick="setGender('female')">♀ Female</button>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="weight">Weight (kg)</label>
+        <input type="number" id="weight" placeholder="e.g. 65" value="65" min="20" max="300" />
+      </div>
+
+      <div class="form-group">
+        <label for="height">Height (cm)</label>
+        <input type="number" id="height" placeholder="e.g. 172" value="172" min="50" max="250" />
+      </div>
     </div>
 
     <div class="form-group">
-      <label>Height (cm)</label>
-      <input type="number" id="height" placeholder="e.g. 172" value="172" />
+      <label for="age">Age (years)</label>
+      <input type="number" id="age" placeholder="e.g. 21" value="21" min="10" max="120" />
     </div>
 
     <div class="form-group">
-      <label>Age (years)</label>
-      <input type="number" id="age" placeholder="e.g. 21" value="21" />
-    </div>
-
-    <div class="form-group">
-      <label>Target Goal</label>
+      <label for="goal">Target Goal</label>
       <div class="select-wrap">
-        <select id="goal">
+        <select id="goal" onchange="calculateMacros()">
           <option value="maintain">Maintain Weight</option>
           <option value="loss">Healthy Fat Loss (-400 kcal)</option>
           <option value="gain">Lean Muscle Gain (+350 kcal)</option>
@@ -291,10 +687,14 @@
       </div>
     </div>
 
-    <button class="btn" onclick="calculateMacros()">Calculate Targets</button>
+    <button class="btn" id="calcBtn" onclick="calculateMacros(event)">Calculate Targets</button>
 
     <div class="result" id="resultBox">
-      <div class="result-title">Estimated Daily Targets</div>
+      <div class="result-header">
+        <div class="result-title">Estimated Daily Targets</div>
+        <div class="result-badge" id="goalBadge">Balanced Split</div>
+      </div>
+      
       <div class="grid">
         <div class="metric-box highlight">
           <span>Target Calories</span>
@@ -313,43 +713,183 @@
           <strong id="resFats">0 g</strong>
         </div>
       </div>
+
+      <!-- Macro Visual Bar Breakdown -->
+      <div class="macro-breakdown">
+        <div class="macro-label">
+          <span>Macro Ratio Distribution</span>
+          <span id="ratioText">25% P / 50% C / 25% F</span>
+        </div>
+        <div class="progress-bar-track">
+          <div class="bar-segment bar-protein" id="barProtein"></div>
+          <div class="bar-segment bar-carbs" id="barCarbs"></div>
+          <div class="bar-segment bar-fats" id="barFats"></div>
+        </div>
+        <div class="legend">
+          <div class="legend-item"><span class="dot dot-protein"></span>Protein</div>
+          <div class="legend-item"><span class="dot dot-carbs"></span>Carbs</div>
+          <div class="legend-item"><span class="dot dot-fats"></span>Fats</div>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
+    let currentGender = 'male';
+    const animatedValues = {
+      calories: 0,
+      protein: 0,
+      carbs: 0,
+      fats: 0
+    };
+
+    function setGender(gender) {
+      currentGender = gender;
+      const switchEl = document.getElementById('genderSwitch');
+      switchEl.setAttribute('data-gender', gender);
+      
+      const buttons = switchEl.querySelectorAll('.gender-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      
+      if (gender === 'male') {
+        buttons[0].classList.add('active');
+      } else {
+        buttons[1].classList.add('active');
+      }
+      
+      calculateMacros();
+    }
+
+    // Interactive Button Ripple Effect
+    document.getElementById('calcBtn').addEventListener('click', function(e) {
+      const btn = e.currentTarget;
+      const circle = document.createElement('span');
+      const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+      const radius = diameter / 2;
+      
+      const rect = btn.getBoundingClientRect();
+      circle.style.width = circle.style.height = `${diameter}px`;
+      circle.style.left = `${e.clientX - rect.left - radius}px`;
+      circle.style.top = `${e.clientY - rect.top - radius}px`;
+      circle.classList.add('ripple');
+      
+      const existingRipple = btn.querySelector('.ripple');
+      if (existingRipple) {
+        existingRipple.remove();
+      }
+      
+      btn.appendChild(circle);
+    });
+
+    function animateNumber(elementId, start, end, duration, suffix) {
+      const obj = document.getElementById(elementId);
+      if (!obj) return;
+
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        // EaseOutCubic function for natural decelerating motion
+        const easeProgress = 1 - Math.pow(1 - progress, 3);
+        const currentVal = Math.floor(easeProgress * (end - start) + start);
+        obj.innerText = currentVal.toLocaleString() + " " + suffix;
+        
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        } else {
+          obj.innerText = end.toLocaleString() + " " + suffix;
+        }
+      };
+      window.requestAnimationFrame(step);
+    }
+
     function calculateMacros() {
       const w = parseFloat(document.getElementById('weight').value);
       const h = parseFloat(document.getElementById('height').value);
       const a = parseFloat(document.getElementById('age').value);
       const goal = document.getElementById('goal').value;
 
-      if (!w || !h || !a) {
-        alert("Please enter valid numbers for weight, height, and age.");
+      if (!w || !h || !a || w <= 0 || h <= 0 || a <= 0) {
         return;
       }
 
-      // Mifflin-St Jeor Formula
-      let bmr = (10 * w) + (6.25 * h) - (5 * a) + 5;
-      let calories = Math.round(bmr * 1.35); // Moderate activity factor
+      // Mifflin-St Jeor Formula with Gender factor
+      const genderOffset = currentGender === 'male' ? 5 : -161;
+      let bmr = (10 * w) + (6.25 * h) - (5 * a) + genderOffset;
+      let calories = Math.round(bmr * 1.35); // Moderate activity multiplier
 
-      if (goal === 'loss') calories -= 400;
-      if (goal === 'gain') calories += 350;
+      let pRatio = 0.25;
+      let cRatio = 0.50;
+      let fRatio = 0.25;
 
-      // Balanced Macro splits: 25% Protein, 50% Carbs, 25% Fats
-      const protein = Math.round((calories * 0.25) / 4);
-      const carbs = Math.round((calories * 0.50) / 4);
-      const fats = Math.round((calories * 0.25) / 9);
+      const goalBadge = document.getElementById('goalBadge');
+      if (goal === 'loss') {
+        calories -= 400;
+        pRatio = 0.30;
+        cRatio = 0.40;
+        fRatio = 0.30;
+        goalBadge.innerText = "Fat Loss Deficit";
+      } else if (goal === 'gain') {
+        calories += 350;
+        pRatio = 0.30;
+        cRatio = 0.50;
+        fRatio = 0.20;
+        goalBadge.innerText = "Surplus Target";
+      } else {
+        goalBadge.innerText = "Maintenance Target";
+      }
 
-      document.getElementById('resCalories').innerText = calories + " kcal";
-      document.getElementById('resProtein').innerText = protein + " g";
-      document.getElementById('resCarbs').innerText = carbs + " g";
-      document.getElementById('resFats').innerText = fats + " g";
+      // Calculate exact macros
+      const protein = Math.round((calories * pRatio) / 4);
+      const carbs = Math.round((calories * cRatio) / 4);
+      const fats = Math.round((calories * fRatio) / 9);
 
-      document.getElementById('resultBox').style.display = "block";
+      const resultBox = document.getElementById('resultBox');
+      
+      // Re-trigger staggered animation if box is already visible
+      if (resultBox.classList.contains('visible')) {
+        resultBox.classList.remove('visible');
+        void resultBox.offsetWidth; // Trigger reflow
+      }
+      resultBox.classList.add('visible');
+
+      // Animate numbers smoothly from previous value to new target
+      animateNumber('resCalories', animatedValues.calories, calories, 700, 'kcal');
+      animateNumber('resProtein', animatedValues.protein, protein, 700, 'g');
+      animateNumber('resCarbs', animatedValues.carbs, carbs, 700, 'g');
+      animateNumber('resFats', animatedValues.fats, fats, 700, 'g');
+
+      // Store updated targets
+      animatedValues.calories = calories;
+      animatedValues.protein = protein;
+      animatedValues.carbs = carbs;
+      animatedValues.fats = fats;
+
+      // Update macro ratio bar distribution percentages
+      document.getElementById('ratioText').innerText = 
+        `${Math.round(pRatio*100)}% P / ${Math.round(cRatio*100)}% C / ${Math.round(fRatio*100)}% F`;
+
+      setTimeout(() => {
+        document.getElementById('barProtein').style.width = (pRatio * 100) + '%';
+        document.getElementById('barCarbs').style.width = (cRatio * 100) + '%';
+        document.getElementById('barFats').style.width = (fRatio * 100) + '%';
+      }, 100);
     }
 
-    // Auto-calculate once on page load for immediate visual impact
-    window.onload = calculateMacros;
+    // Auto-calculate on load with subtle animation
+    window.onload = function() {
+      setTimeout(calculateMacros, 200);
+    };
+
+    // Recalculate live when user inputs change
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', function() {
+        if (this.value) {
+          calculateMacros();
+        }
+      });
+    });
   </script>
 </body>
 </html>
+
